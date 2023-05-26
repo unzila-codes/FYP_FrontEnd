@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Kaisei+Tokumin:wght@400;500;700;800&family=Montserrat:wght@500&family=Poppins:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Corinthia:wght@700&family=Kaisei+Tokumin:wght@400;500;700;800&family=Montserrat:wght@500&family=Poppins:wght@300;400;500;700&display=swap');
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* ==============================Contact========================================== */
+
+.MainHeading{
+    margin-top: 50px;
+    text-align: center;
+    padding: 0;  
+    margin-bottom: 80px;
+}
+.MainHeading h1{
+    font-size: 40px;
+    font-weight: 800;
+    font-family: 'Poppins';
+    
+}
+.MainHeading p{
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Poppins';
+    border-bottom: 3px solid #D04068;
+    width: 13rem;
+    padding-bottom: 10px;
+    margin-left:auto;
+    margin-right: auto;
+    color: #6F6D6B;
+    border-radius: 1px;
+}
+
+.ContactContainer{
+    background-color: #F1F1F1;
+    height: 30rem;
+    width: 100%; 
+}
+.ContactContainer h5{
+    font-weight: 500;
+    color: #D04068;
+    margin-top: 16px;
+}
+.form-group{
+    padding: 17px 0px 12px 0px;
+    color: #6C6161;
+}
+.form-group input, textarea.form-control{
+    background-color: #D9D9D9;
+    border: none;
+}
+.formbtn{
+    margin-top: 10px;
+    width: 100%;
+    padding: 6px 0px 6px 0px;
+    border: none;
+    color: white;
+    background-color: #D04068;
+    border-radius: 5px;   
+}
+.ContactList{
+    font-size: 13px;
+}
+.ContactList ul li span{
+    padding: 30px;
+}
+.ContactList ul li{
+    padding: 10px;
+}
+.ContactList ul{
+    list-style-type: none;
+}
+.ConImg{
+    height: 15px;
+}
+.ContactImg{
+    height: 12px;
+}
