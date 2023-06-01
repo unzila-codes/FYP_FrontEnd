@@ -21,35 +21,10 @@
     margin-top: 8rem;
 }
 .div_profile_info{
-    margin-top: 20px;
+    margin-top: 15px;
 }
-
-.occupation{
-    color: rgba(0, 0, 0, 0.711);
-    margin-top: -5px;
-}
-
-.social_info{
-    display: flex;
-    flex-direction: row;
-
-}
-.div_profile_info{
-    position: absolute;
-
-    bottom: 290px;
-    left: 290px;
-}
-.social_info p{
-    font-size: 12px;
-    margin-top: -10px;
-    color: rgb(106, 102, 102);
-}
-.social_info i{
-    font-size: 12px;
-    margin-top: -10px;
-    color: rgba(0, 0, 0, 0.762);
-    margin-right: 5px   ;
+.personal_info{
+    margin-top: 60px;
 }
 .checked{
     color: orange;
@@ -63,16 +38,26 @@
     margin-bottom: 30px;
 }
 
+.btn_left{
+    width: 100px;
+    font-size: 0.7rem;
+    position: absolute;
+    left: 47px;
+    top: 206px;
+    background-color: #D04068;
+    border: none;
+}
+
 .left_buttons {
     background-color: #D04068;
     border: none;
     font-size: 18px;
     margin-top: 10px;
-    /* border-radius: 30px; */
+   text-decoration: none;
 }
 link{
     text-decoration: none;
-    color: white;
+    color: #d04068;
 }
 .left_body{
     margin-left: 100px;
@@ -81,17 +66,30 @@ link{
     
     
 }
-
+.left_body h5{
+    color: #d04068;
+}
 .left_body p{
     font-size: 12px;
-    margin-top: 20px;
+    margin-top: 1px;
+    margin-left: 10px
 }
 
 .row_dues{
     background-color: rgba(128, 128, 128, 0.185);
-    height: 50px;
+    height: 71px;
+    width: 97%;
+    
     /* border-radius: 10px; */
 }
+.AcceptRejectBtn{
+    margin: -56px;
+    margin-left: 144px;
+}
+.btn_pay_now:hover {
+    background-color: rgb(4, 103, 53);
+  }
+
 
 .reject_button{
     position: relative;
@@ -111,9 +109,10 @@ link{
 
 .center_tenant{
     font-size: 16px;
-    margin-top: 5px;
+    margin-top: 8px;
 }
 .outstanding_dues{
+    margin: 0;
     font-size: 12px;
     margin-top: -5px;
 }
@@ -121,6 +120,7 @@ link{
     color: #D04068;
     font-weight: bold;
 }
+
 .center_body{
     margin-left: 30px;
 }

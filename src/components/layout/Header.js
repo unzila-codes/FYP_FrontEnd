@@ -1,27 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import "./component.css";
 import { Link} from "react-router-dom";
 import logo from "../../images/main_logo.png";
 import profile_nav from "../../images/profile_nav.jpg";
-import { UserContext } from "../../context/UserContext";
+
 
 const Header = () => {
   
-  const { isLoggedIn, logout} = useContext(UserContext);
+  
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const isLoggedIn = true;
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
   
-  const handleLogout = () => {
-    logout();
-  };
-
-  // UserContext say call krega
-  // const handleLogout = () => {
-  //   logout(); 
-  // };
 
   return (
     <>
@@ -52,13 +45,24 @@ const Header = () => {
                       <Link to="/Contact">Contact</Link>
                     </li>
                     {/* <li>
-                      <Link to="/Register">JoinUs</Link>
-                    </li> */}
-                    {isLoggedIn && (
+                    <Link to="/profile">Profile</Link>
+                    </li>
+                 
                       <li>
                         <Link to="/AddPropertyBasic">Add Property</Link>
-                      </li>
-                    )}
+                      </li> */}
+
+                      {isLoggedIn && (
+                        <>
+                          <li>
+                            <Link to="/AddPropertyBasic">Add Property</Link>
+                          </li>
+                          <li>
+                            <Link to="/profile">Profile</Link>
+                          </li>
+                        </>
+                      )}
+                   
                   </ul>
                 </div>
               </div>
@@ -73,22 +77,17 @@ const Header = () => {
                   </a>
                   {isDropdownOpen && (
                     <div className="dropdown">
-                      {isLoggedIn ? (
-                        <>
-                        {isLoggedIn && (
-                          <Link to="/profile">Profile</Link>
-                        )}
-                          {/* <Link to="/Logout">Logout</Link> */}
-                          <a href="#" onClick={handleLogout}>
+                 
+                        
+                          <Link to="/Profile">Profile</Link> 
+                          <Link to="/Logout">Logout</Link> 
+                          {/* <a href="#">
                             Logout
-                          </a>
-                        </>
-                      ) : (
-                        <>
+                          </a> */}
+                        
                           <Link to="/Login">Login</Link>
                           <Link to="/Register">Register</Link>
-                        </>
-                      )}
+                      
                     </div>
                   )}
                 </div>

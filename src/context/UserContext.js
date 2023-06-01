@@ -1,4 +1,3 @@
-
 import {createContext, useState, useEffect} from 'react'
 import axios from 'axios'
 
@@ -24,8 +23,7 @@ export const UserContextProvider = ({children}) => {
                 password 
             });
             if(data.success && data.token){
-              console.log(localStorage.setItem('loginToken', data.token));
-                
+                localStorage.setItem('loginToken', data.token);
                 setWait(false);
                 setIsLoggedIn(true); 
                 return {success:1};
@@ -42,15 +40,13 @@ export const UserContextProvider = ({children}) => {
 
     const loggedInCheck = async () => {
         const loginToken = localStorage.getItem('loginToken');
-        // Axios.defaults.headers.common['Authorization'] = 'Bearer ' + loginToken;
         Axios.defaults.headers.common['Authorization'] = 'Bearer ' + loginToken;
-
         if (loginToken) {
           try {
             const { data } = await Axios.get('getUser.php');
             if (data.success && data.user) {
               setUser(data.user);
-             setIsLoggedIn(true); // Update isLoggedIn to true if user data is available
+              setIsLoggedIn(true); // Update isLoggedIn to true if user data is available
               return;
             }
           } catch (error) {
@@ -61,20 +57,12 @@ export const UserContextProvider = ({children}) => {
         setIsLoggedIn(false); // Update isLoggedIn to false if user data is not available or if there was an error
       };
 
-      // const logout = () => {
-      //   localStorage.removeItem('loginToken');
-      //   setUser(null);
-      //   setIsLoggedIn(false);
-        
-      // };
-
       const logout = () => {
         localStorage.removeItem('loginToken');
-        delete Axios.defaults.headers.common['Authorization'];
         setUser(null);
         setIsLoggedIn(false);
         // Add any other necessary cleanup code here
-    };
+      };
 
     useEffect(() => {
         async function asyncCall(){
@@ -83,10 +71,6 @@ export const UserContextProvider = ({children}) => {
         asyncCall();
     },[]);
 
-    // useEffect(() => {
-    //   loggedInCheck();
-    // }, [isLoggedIn]);
-    
     // const logout = () => {
     //     localStorage.removeItem('loginToken');
     //     setUser(null);
@@ -101,5 +85,4 @@ export const UserContextProvider = ({children}) => {
     );
 
 }
-
 export default UserContextProvider;

@@ -4,7 +4,6 @@ import "./register.css";
 import google_icon from "../../images/google_icon.png";
 import logo from "../../images/logo.png";
 import { Layout } from "../../components/layout/Layout";
-
 import { useRef } from "react";
 
 // For font awsome
@@ -21,7 +20,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 // REGEX = to have a proper input format
-const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
+const USER_REGEX = /^[A-Za-z][A-Za-z0-9-_ ]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/;
 const CNIC_REGIX = /^[0-9+]{5}-[0-9+]{7}-[0-9]{1}$/;

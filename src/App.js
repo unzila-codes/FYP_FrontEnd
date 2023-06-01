@@ -1,8 +1,13 @@
 
 // import './Style.css';
-import { BrowserRouter,Switch, Route, Routes,useNavigate } from 'react-router-dom'
-import { UserContextProvider } from './context/UserContext';
+
+import { BrowserRouter, Route, Routes,useNavigate  } from 'react-router-dom'
+import React, { useState } from 'react';
 // Toastify
+
+
+
+
 
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -34,7 +39,8 @@ import AddPropertyBasic from './pages/addProperty/AddPropertyBasic';
 
 
 function App() {
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const navigate = useNavigate();
   return (
     
 
@@ -43,17 +49,25 @@ function App() {
     
 
       <ToastContainer />
-      <UserContextProvider >
+     
       <Routes>
      
-
+       <Route path="/Profile" element={<Profile/>} /> 
+       <Route path='/Login' element={<Login />} />
+       
+        <Route path='/Register' element={<Register />} />
+             
+              
+             
+           
         <Route path='/' element={<Homepage />} />
+        
         <Route path='/About' element={<About />} />
         <Route path='/FindHouse' element={<FindHouse />} />
         <Route path='/Contact' element={<Contact />} />
-        <Route path='/Register' element={<Register />} />
+        <Route path='/AddPropertyBasic' element={<AddPropertyBasic />} />
 
-        <Route path='/Profile' element={<Profile />} />
+        
         {/* <Route path='/HouseDetails' element={<HouseDetails />} /> */}
         <Route path='/HouseDetails/:property_id' element={<HouseDetails />} />
 
@@ -64,10 +78,10 @@ function App() {
         {/* jo pages bnao gi un ka path yaha add karna ha 
         jahan ma nay AddProperty_1 /2/3 likha ha wahan apnay page ka name add kr dena aur upar import kr dena
          */}
-         <Route path='/AddPropertyBasic' element={<AddPropertyBasic />} />
+       
         <Route path='/AddPropertImage' element={<AddPropertImage />} />
         <Route path='/AddPropertAddress' element={<AddPropertAddress />} />
-        <Route path='/Login' element={<Login />} />
+        
 
         {/* <Route path='/AddProperty_1' element={<AddProperty_1 />} /> */}
 
@@ -80,7 +94,7 @@ function App() {
         {/* Correct the login */}
 
       </Routes>
-      </UserContextProvider>
+     
     </BrowserRouter>
 
 

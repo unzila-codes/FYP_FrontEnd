@@ -2,28 +2,37 @@ import React, {useState, useEffect, useRef, useContext} from 'react';
 import { Layout } from '../../components/layout/Layout'
 import './AddPropertyBasic.css'
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
 
 
-// Custom hook for conditional redirection
-const useRedirectIfNotLoggedIn = () => {
-  const navigate = useNavigate();
-  const { isLoggedIn } = useContext(UserContext);
-
-  console.log('isLoggedIn:', isLoggedIn);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      console.log('Redirecting to login page');
-      navigate('/Login');
-    }
-  }, [isLoggedIn, navigate]);
-};
 
 
 const AddPropertyBasic = () => {
-  useRedirectIfNotLoggedIn();
+ 
+  const [profileData, setProfileData] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch('http://localhost/FYP/profile.php', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          setProfileData(data.profile);
+          const retrievedUserId = data.profile.id;
+          setUserId(retrievedUserId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching profile data:', error);
+      });
+  }, []);
+
+  
+  
   const initialState = {
     title: '',
     size: '',
@@ -48,7 +57,7 @@ const AddPropertyBasic = () => {
   const [isToggleOn1, setToggleOn1] = useState(false);
   const [isToggleOn2, setToggleOn2] = useState(false);
   const [isToggleOn3, setToggleOn3] = useState(false);
-  const [userID, setUserID] = useState("");
+ 
 
   
 
@@ -93,6 +102,7 @@ const AddPropertyBasic = () => {
     setStep2Data(newPreviewImages);
   }
 
+
   const handleNext = (e) => {
     e.preventDefault();
     setStep(step + 1);
@@ -120,6 +130,7 @@ const AddPropertyBasic = () => {
   
     if (window.confirm('Are you sure you want to submit this form?')) {
       const formData = new FormData();
+      formData.append('userId', userId);
       formData.append('type', step1Data.type);
       formData.append('title', step1Data.title);
       formData.append('date', step1Data.date);

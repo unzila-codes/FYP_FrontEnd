@@ -6,6 +6,28 @@ import React, { useState, useEffect } from 'react';
 
 export const FindHouse = () => {
   const [houses, setHouses] = useState([]);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    fetch('http://localhost/FYP/profile.php', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 'success') {
+          const retrievedUserId = data.profile.id;
+          setUserId(retrievedUserId);
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching profile id:', error);
+      });
+  }, []);
+
+
   useEffect(() => {
     const getHouse = async ()=>{
         const res= await fetch ('http://localhost/FYP/API/houses.php');
@@ -22,7 +44,24 @@ export const FindHouse = () => {
         getHouse();
       }, []);
 
-      
+        // Function to delete a property
+        const deleteProperty = async (id) => {
+          try {
+            const response = await fetch(`http://localhost/FYP/API/houses.php?id=${id}`, {
+              method: 'DELETE',
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+              // Property deleted successfully, update the UI by removing the property from the list
+              setHouses((prevHouses) => prevHouses.filter((house) => house.property_id !== id));
+            } else {
+              console.error('Error deleting property:', data.message);
+            }
+          } catch (error) {
+            console.error('Error deleting property:', error);
+          }
+        };
+         
       
 
       // Create a new array with only one image per property
@@ -58,7 +97,9 @@ export const FindHouse = () => {
     <Layout>
       <section className="house_Cards">
         <div className="container">
-            
+       
+           
+         
           <div className="row row_cards">
              {/* Render fetched data in your cards */}
              {uniqueHouses.map(house => (
@@ -72,12 +113,18 @@ export const FindHouse = () => {
                     <p className="card-text details">{house.title},{house.city}</p>
                     
                     <span class="BedroomIcon"><i class="fa fa-bed" aria-hidden="true"></i>{house.beds}</span> <span class="ShowerIcon"> <i class="fa fa-bath" aria-hidden="true"></i>{house.bathrooms}</span>
-                    <p className="posted_time mb-3">{getTimeAgo(house.datePosted)}</p> {/* Display time ago information */}
+                    <p className="posted_time mb-4">{getTimeAgo(house.datePosted)}</p> {/* Display time ago information */}
                     <Link className="btn_card btn btn-primary" to={`/HouseDetails/${house.property_id}`}>
                     Details
                   </Link>
+                {userId && Number(house.user_id) === Number(userId) && (
+                    <button className="btn_del btn btn-danger"  onClick={() => deleteProperty(house.property_id)}>
+                      Delete
+                    </button>
+                  )}
               
                   </div>
+                  
                 </div>
               </div>
               ))} 

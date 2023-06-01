@@ -241,10 +241,20 @@
     position: absolute; /* Set position to absolute */
   bottom: 10px; /* Align button to the bottom of the card */
   right:  14px; /* Align button to the left of the card */
-  width: 41%; /* Set width to 100% of the card */
+  width: 25%; /* Set width to 100% of the card */
   font-size: 0.7rem;
   background-color: #D04068;
   border: none;
+  }
+
+  .btn_del{
+    text-decoration: none;
+    position: absolute;
+    bottom: 10px;
+    right: 86px;
+    width: 25%;
+    font-size: 0.7rem;
+    border: none;
   }
 
   .btn_card:hover{
