@@ -1,10 +1,61 @@
 import "./profile.css";
 import { Layout } from "../../components/layout/Layout";
 import React, { useEffect, useState } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
+  const [loading, setLoading] = useState(true); // New state variable
+
   const [profileData, setProfileData] = useState(null);
+  const [biddingData, setBiddingData] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    cnic: "",
+  });
+  const [selectedBidStatus, setSelectedBidStatus] = useState("");
+
+  const handleEdit = () => {
+    setEditMode(true);
+    setFormData({
+      name: profileData.name,
+      cnic: profileData.cnic,
+    });
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+
+    // Prepare the updated profile data
+    const updatedProfileData = {
+      ...profileData,
+      name: formData.name,
+      cnic: formData.cnic,
+    };
+    const token = localStorage.getItem("token");
+    // Send a request to the backend API to update the profile data
+    fetch("http://localhost/FYP/update_profile.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updatedProfileData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setProfileData(updatedProfileData);
+          setEditMode(false);
+        } else {
+          // Handle error response
+        }
+      })
+      .catch((error) => {
+        // Handle error
+      });
+      
+  };
 
   useEffect(() => {
     // Fetch profile data using the stored token or handle authentication state appropriately
@@ -21,6 +72,44 @@ const Profile = () => {
       .then((data) => {
         if (data.status === "success") {
           setProfileData(data.profile);
+          setBiddingData(data.biddingData);
+        } else {
+          // Handle error response
+        }
+      })
+      .catch((error) => {
+        // Handle error
+      })
+      .finally(() => {
+        setLoading(false); // Set loading state to false when the data is fetched
+      });
+  }, []);
+
+  const handleBidAccept = (bidId) => {
+    const token = localStorage.getItem("token");
+    // Send a request to the backend API to update the bid status as accepted
+    fetch(`http://localhost/FYP/profile.php?bid_id=${bidId}&status=accepted`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          // Update the bidding data in the frontend to reflect the accepted status
+          const updatedBiddingData = biddingData.map((bid) => {
+            if (bid.bid_id === bidId) {
+              return {
+                ...bid,
+                status: "accepted",
+              };
+            }
+            return bid;
+          });
+          setBiddingData(updatedBiddingData);
+          setSelectedBidStatus("accepted"); 
         } else {
           // Handle error response
         }
@@ -28,8 +117,76 @@ const Profile = () => {
       .catch((error) => {
         // Handle error
       });
-  }, []);
+  };
 
+  const handleBidReject = (bidId) => {
+    const token = localStorage.getItem("token");
+    // Send a request to the backend API to update the bid status as rejected
+    fetch(`http://localhost/FYP/profile.php?bid_id=${bidId}&status=rejected`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === "success") {
+          // Update the bidding data in the frontend to reflect the rejected status
+          const updatedBiddingData = biddingData.map((bid) => {
+            if (bid.bid_id === bidId) {
+              return {
+                ...bid,
+                status: "rejected",
+              };
+            }
+            return bid;
+          });
+          setBiddingData(updatedBiddingData);
+          setSelectedBidStatus("rejected"); // Disable the "Accept" button for the selected bid
+        } else {
+          // Handle error response
+        }
+      })
+      .catch((error) => {
+        // Handle error
+      });
+  };
+
+  const renderButton = (bid) => {
+    if (bid.status === "accepted") {
+      return <button type="button" className="btn btn-primary btn_pay_now">Pay Now</button>;
+    } else if (bid.status === "rejected") {
+      return (
+        <button type="button" className="btn btn-outline-danger reject_button" disabled>
+          Rejected
+        </button>
+      );
+    } else {
+      return (
+        <>
+        <button
+          type="button"
+          className={`btn btn-primary btn_pay_now ${selectedBidStatus === "accepted" ? "disabled-button" : ""}`}
+          onClick={() => handleBidAccept(bid["bid_id "])}
+          style={{ cursor: selectedBidStatus === "accepted" ? "not-allowed" : "pointer" }}
+          disabled={selectedBidStatus === "accepted"}
+        >
+          {selectedBidStatus === "accepted" ? "Processing..." : "Accept"}
+        </button>
+        <button
+        type="button"
+        className={`btn btn-outline-danger reject_button ${selectedBidStatus === "rejected" ? "disabled-button" : ""}`}
+        onClick={() => handleBidReject(bid["bid_id "])}
+        style={{ cursor: selectedBidStatus === "rejected" ? "not-allowed" : "pointer" }}
+        disabled={selectedBidStatus === "rejected"}
+        >
+        {selectedBidStatus === "rejected" ? "Processing..." : "reject"}
+      </button>
+      </>
+      );
+    }
+  };
   const handleLogout = () => {
     // Remove the token from local storage and redirect to the login page
     localStorage.removeItem("token");
@@ -50,10 +207,14 @@ const Profile = () => {
                   <span>CNIC:</span> {profileData.cnic}
                 </p>
                 <p className="email">
-                  <span>EMAIL:</span> {profileData.email}   
+                  <span>EMAIL:</span> {profileData.email}
                 </p>
                 <button type="button" onClick={handleLogout}>
                   Logout
+                </button>
+
+                <button type="button" className="ml-4" onClick={handleEdit}>
+                  Edit
                 </button>
               </div>
             ) : (
@@ -61,6 +222,39 @@ const Profile = () => {
             )}
           </div>
         </div>
+        {editMode && (
+          <div className="col-md-9 personal_info">
+            <h3 className="porfile_heading">Edit Profile</h3>
+            <form onSubmit={handleSave}>
+              <label htmlFor="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                value={formData.name}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
+              />
+
+              <label htmlFor="cnic">CNIC:</label>
+              <input
+                type="text"
+                id="cnic"
+                value={formData.cnic}
+                onChange={(e) =>
+                  setFormData({ ...formData, cnic: e.target.value })
+                }
+              />
+
+              <div>
+                <button type="submit">Save</button>
+                <button type="button" onClick={() => setEditMode(false)}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </section>
 
       <section className="sec_profile_body">
@@ -78,33 +272,52 @@ const Profile = () => {
               </Link>
             </div>
             {/* center  */}
-            <div className="col-md-6 center_body left_body">
-              <h5>Tenants Requests</h5>
-              <div className="row_dues col-md-12">
-              {profileData ? (
-                <h6 className="pt-1 ">{profileData.name}</h6>
-                ) : (
-                  <p>Loading...</p>
-                )}
-                <p className="outstanding_dues">
-                  <span> Price </span> 100,000
-                </p>
-                <p className="outstanding_dues">
-                  <span> Property </span> CAA Colony, Karachi. Near Airport
-                </p>
-                <div className="AcceptRejectBtn">
-                  <button
-                    type="button"
-                    class="btn btn-outline-danger reject_button"
-                  >
-                    Reject
-                  </button>
-                  <button type="button" class="btn btn-primary btn_pay_now">
-                    Accept
-                  </button>
-                </div>
+            {biddingData && !loading && (
+              <div className="col-md-6 center_body left_body">
+                <h5>Tenants Requests</h5>
+                {biddingData.map((bid, index) => (
+                  <div className="row_dues col-md-12" key={index}>
+                    <h6 className="pt-1 ">{bid.name}</h6>
+                    {/* <span> bid id </span> {bid["bid_id "]} */}
+                    <p className="outstanding_dues">
+                      <span> Price </span> {bid.amount}
+                      
+                    </p>
+                    <p className="outstanding_dues">
+                      <span> Property </span> {bid.title}
+                    </p>
+                    <div className="AcceptRejectBtn">
+                    {renderButton(bid)}
+                      {/* {bid.status !== 'accepted' ? (
+                        <>
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger reject_button"
+                            onClick={() => handleBidReject(bid["bid_id "] ) }
+                          >
+                            Reject
+                          </button>
+                          <button
+                            type="button"
+                            className={`btn btn-primary btn_pay_now ${bid.status === 'rejected' ? 'disabled-button' : ''}`}
+                            onClick={() => handleBidAccept(bid["bid_id "])}
+                            style={{ cursor: bid.status === 'rejected' ? 'not-allowed' : 'pointer' }}
+                            disabled={bid.status === 'rejected'}
+                          >
+                            Accept
+                          </button>
+
+                        </>
+                      ) : (
+                        <button type="button" className="btn btn-primary btn_pay_now">
+                          Pay Now
+                        </button>
+                      )} */}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

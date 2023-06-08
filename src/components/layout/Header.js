@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import "./component.css";
 import { Link} from "react-router-dom";
 import logo from "../../images/main_logo.png";
@@ -7,10 +7,23 @@ import profile_nav from "../../images/profile_nav.jpg";
 
 const Header = () => {
   
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const isLoggedIn = true;
+  
+  useEffect(() => {
+    // Check if the user is already logged in
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
+  const handleLogout = () => {
+    // Remove the token from local storage and redirect to the login page
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    window.location.href = "/Login"; // Replace with the appropriate route for your login page
+  };
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -44,25 +57,16 @@ const Header = () => {
                     <li>
                       <Link to="/Contact">Contact</Link>
                     </li>
-                    {/* <li>
-                    <Link to="/profile">Profile</Link>
-                    </li>
-                 
+                    {isLoggedIn && (
+                      <li>
+                        <Link to="/Profile">Profile</Link>
+                      </li>
+                    )}
+                    {isLoggedIn && (
                       <li>
                         <Link to="/AddPropertyBasic">Add Property</Link>
-                      </li> */}
-
-                      {isLoggedIn && (
-                        <>
-                          <li>
-                            <Link to="/AddPropertyBasic">Add Property</Link>
-                          </li>
-                          <li>
-                            <Link to="/profile">Profile</Link>
-                          </li>
-                        </>
-                      )}
-                   
+                      </li>
+                    )}
                   </ul>
                 </div>
               </div>
@@ -76,19 +80,21 @@ const Header = () => {
                     />
                   </a>
                   {isDropdownOpen && (
-                    <div className="dropdown">
-                 
-                        
-                          <Link to="/Profile">Profile</Link> 
-                          <Link to="/Logout">Logout</Link> 
-                          {/* <a href="#">
-                            Logout
-                          </a> */}
-                        
-                          <Link to="/Login">Login</Link>
-                          <Link to="/Register">Register</Link>
-                      
-                    </div>
+                       <div className="dropdown">
+                       {isLoggedIn ? (
+                         <>
+                           <Link to="/Profile">Profile</Link>
+                           <a href="#" onClick={handleLogout}>
+                             Logout
+                           </a>
+                         </>
+                       ) : (
+                         <>
+                           <Link to="/Login">Login</Link>
+                           <Link to="/Register">Register</Link>
+                         </>
+                       )}
+                     </div>
                   )}
                 </div>
               </div>

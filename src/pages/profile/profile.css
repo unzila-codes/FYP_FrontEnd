@@ -47,6 +47,9 @@
     background-color: #D04068;
     border: none;
 }
+.disabled-button {
+    cursor: not-allowed;
+}
 
 .left_buttons {
     background-color: #D04068;

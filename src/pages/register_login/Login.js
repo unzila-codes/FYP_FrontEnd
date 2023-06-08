@@ -8,7 +8,9 @@ import React, { useState} from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 
 
-export const Login = ({ setIsLoggedIn }) => {
+export const Login = ( ) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,10 +34,12 @@ export const Login = ({ setIsLoggedIn }) => {
           const { token } = data;
           // Store the token in local storage
           localStorage.setItem("token", token);
-         // 
+          if (token) {
+            setIsLoggedIn(true);
+          }
           // Redirect or navigate to the profile page
          window.location.href = "/profile";
-         setIsLoggedIn(true);
+         
          //navigate.push("/profile");
         } else {
           setError("Invalid login credentials");

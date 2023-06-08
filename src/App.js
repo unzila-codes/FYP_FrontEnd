@@ -39,8 +39,7 @@ import AddPropertyBasic from './pages/addProperty/AddPropertyBasic';
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  //const navigate = useNavigate();
+
   return (
     
 
