@@ -288,31 +288,7 @@ const Profile = () => {
                     </p>
                     <div className="AcceptRejectBtn">
                     {renderButton(bid)}
-                      {/* {bid.status !== 'accepted' ? (
-                        <>
-                          <button
-                            type="button"
-                            className="btn btn-outline-danger reject_button"
-                            onClick={() => handleBidReject(bid["bid_id "] ) }
-                          >
-                            Reject
-                          </button>
-                          <button
-                            type="button"
-                            className={`btn btn-primary btn_pay_now ${bid.status === 'rejected' ? 'disabled-button' : ''}`}
-                            onClick={() => handleBidAccept(bid["bid_id "])}
-                            style={{ cursor: bid.status === 'rejected' ? 'not-allowed' : 'pointer' }}
-                            disabled={bid.status === 'rejected'}
-                          >
-                            Accept
-                          </button>
-
-                        </>
-                      ) : (
-                        <button type="button" className="btn btn-primary btn_pay_now">
-                          Pay Now
-                        </button>
-                      )} */}
+                     
                     </div>
                   </div>
                 ))}
