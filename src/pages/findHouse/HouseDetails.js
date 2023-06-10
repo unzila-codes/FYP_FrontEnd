@@ -12,6 +12,7 @@ export const HouseDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userId, setUserId] = useState(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,46 +57,45 @@ export const HouseDetails = () => {
       });
   }, []);
 
- 
   const handleNegotiationRequest = () => {
     // Fetch the user ID from the state
     const user_id = userId;
-  
+
     // Fetch the property ID from the URL parameter
-    const propertyId  = property_id;
-  
+    const propertyId = property_id;
+
     // Destructure the form data
-    const {name, email, phone, amount, time } = formData;
-  
+    const { name, email, phone, amount, time } = formData;
+
     // Create the payload for the API request
     const payload = {
       userId: user_id,
-      property_id: propertyId, 
+      property_id: propertyId,
       name,
       email,
       amount,
       phone,
-      time
+      time,
     };
-  
+
     // Make the API request to insert the data into the bidding table
-    fetch('http://localhost/FYP/bidding.php', {
-      method: 'POST',
+    fetch("http://localhost/FYP/bidding.php", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Bidding data:', data);
+        console.log("Bidding data:", data);
         // Handle the response or perform any necessary actions
       })
       .catch((error) => {
-        console.error('Error inserting bidding data:', error);
+        console.error("Error inserting bidding data:", error);
         // Handle the error or display an error message
       });
-  
+
     setShowModal(true);
   };
 
@@ -115,15 +115,27 @@ export const HouseDetails = () => {
     );
   };
 
-  
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
 
+  useEffect(() => {
+    if (!showModal) {
+      // Reset the form data when the modal is closed
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        amount: "",
+        time: "",
+      });
+    }
+  }, [showModal]);
+
   if (loading) {
     return <h2>Loading...</h2>;
   }
+
 
   return (
     <Layout>
@@ -229,83 +241,90 @@ export const HouseDetails = () => {
               <ul>
                 <li>{houses.features}</li>
               </ul>
+              <p><h6>Electicity </h6>Maximum {houses.electricity} hrs Availability</p>
+              <p><h6>Gas </h6>Maximum {houses.gas} hrs Availability</p>
+              <p><h6>Water </h6>Maximum {houses.water} hrs Availability</p>
               <p class="PropertyRecom">
                 We highly recommend viewing this property.
               </p>
             </div>
             <div class="col-md-4 mb-5 SideProfileInfo">
-              <form>
-                <h4 class="mt-3">
-                  PKR <span>{houses.price}</span>
-                </h4>
-                <div class="form-group">
-                  <input
-                    type="text"
-                    class="form-control mb-4"
-                    id="exampleInputName1"
-                    placeholder="Name"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                  />
-                  <input
-                    type="email"
-                    class="form-control mb-4"
-                    id="exampleInputEmail1"
-                    aria-describedby="emailHelp"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                  />
+              {userId && Number(houses.user_id) === Number(userId) ? (
+                <p>You are the owner of this property.</p>
+              ) : (
+                <form>
+                  <h4 class="mt-3">
+                    PKR <span>{houses.price}</span>
+                  </h4>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control mb-4"
+                      id="exampleInputName1"
+                      placeholder="Name"
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                    />
+                    <input
+                      type="email"
+                      class="form-control mb-4"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      placeholder="Email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                    />
 
-                  <input
-                    type="text"
-                    class="form-control mb-4"
-                    id="exampleInputphone"
-                    placeholder="Phone"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                  />
-                  <input
-                    type="tel"
-                    pattern="[0-9]*"
-                    inputMode="numeric"
-                    class="form-control mb-4"
-                    id="exampleInputAmount"
-                    placeholder="Amount"
-                    value={formData.amount}
-                    onChange={(e) =>
-                      setFormData({ ...formData, amount: e.target.value })
-                    }
-                  />
-                  <input
-                    type="time"
-                    class="form-control"
-                    id="exampleInputvh"
-                    placeholder="Visiting hrs"
-                    value={formData.time}
-                    onChange={(e) =>
-                      setFormData({ ...formData, time: e.target.value })
-                    }
-                  />
-                  <button type="submit" class="formbtn mt-4">
-                    Send Email
-                  </button>
-                  {/* <button type="submit" class="formbtn mt-4">Send Request For Negotiation</button> */}
-                  <button
-                    type="button"
-                    class="formbtn mt-4"
-                    onClick={handleNegotiationRequest}
-                  >
-                    Send Request For Negotiation
-                  </button>
-                </div>
-              </form>
+                    <input
+                      type="text"
+                      class="form-control mb-4"
+                      id="exampleInputphone"
+                      placeholder="Phone"
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                    />
+                    <input
+                      type="tel"
+                      pattern="[0-9]*"
+                      inputMode="numeric"
+                      class="form-control mb-4"
+                      id="exampleInputAmount"
+                      placeholder="Amount"
+                      value={formData.amount}
+                      onChange={(e) =>
+                        setFormData({ ...formData, amount: e.target.value })
+                      }
+                    />
+                    <input
+                      type="time"
+                      class="form-control"
+                      id="exampleInputvh"
+                      placeholder="Visiting hrs"
+                      value={formData.time}
+                      onChange={(e) =>
+                        setFormData({ ...formData, time: e.target.value })
+                      }
+                    />
+                    <button type="submit" class="formbtn mt-4">
+                      Send Email
+                    </button>
+                    {/* <button type="submit" class="formbtn mt-4">Send Request For Negotiation</button> */}
+                    <button
+                      type="button"
+                      class="formbtn mt-4"
+                      onClick={handleNegotiationRequest}
+                    >
+                      Send Request For Negotiation
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>
@@ -314,8 +333,8 @@ export const HouseDetails = () => {
       {showModal && (
         <div className="popup-container">
           <div className="popup-content">
-            <h3>Request for Negotiation</h3>
-            <p>Enter your negotiation details here.</p>
+            <h2>Thank You!</h2>
+            <p>Your negotiation request has been submitted.</p>
             {/* ...additional input fields, buttons, etc. for negotiation form... */}
             <button onClick={handleCloseModal}>Close</button>
           </div>

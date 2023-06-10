@@ -8,6 +8,7 @@ const Profile = () => {
 
   const [profileData, setProfileData] = useState(null);
   const [biddingData, setBiddingData] = useState(null);
+  const [tenData, settenData] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -73,6 +74,7 @@ const Profile = () => {
         if (data.status === "success") {
           setProfileData(data.profile);
           setBiddingData(data.biddingData);
+          settenData(data.tenData);
         } else {
           // Handle error response
         }
@@ -154,6 +156,7 @@ const Profile = () => {
   };
 
   const renderButton = (bid) => {
+    
     if (bid.status === "accepted") {
       return <button type="button" className="btn btn-primary btn_pay_now">Pay Now</button>;
     } else if (bid.status === "rejected") {
@@ -183,6 +186,7 @@ const Profile = () => {
         >
         {selectedBidStatus === "rejected" ? "Processing..." : "reject"}
       </button>
+      
       </>
       );
     }
@@ -273,10 +277,14 @@ const Profile = () => {
             </div>
             {/* center  */}
             {biddingData && !loading && (
+              
               <div className="col-md-6 center_body left_body">
+               <h6 className="pt-1">Bid Count: {biddingData.length}</h6> {/* Add this line */}
                 <h5>Tenants Requests</h5>
                 {biddingData.map((bid, index) => (
                   <div className="row_dues col-md-12" key={index}>
+                    
+                    
                     <h6 className="pt-1 ">{bid.name}</h6>
                     {/* <span> bid id </span> {bid["bid_id "]} */}
                     <p className="outstanding_dues">
@@ -294,6 +302,36 @@ const Profile = () => {
                 ))}
               </div>
             )}
+
+            {/* second table */}
+
+            {tenData && !loading && (
+              
+              <div className="col-md-6 center_body left_body mt-5">
+                <h5>Sending Requests</h5>
+                {tenData.map((ten, index) => (
+                  <div className="row_dues col-md-12" key={index}>
+ <h6 className="pt-1 ">{ten.title}</h6>
+        	  <p className="outstanding_dues">
+                      <span> Price </span> {ten.amount}
+                      
+                    </p>
+                    <p className="outstanding_dues">
+                      <span> Property </span> {ten.title}
+                    </p>
+                    <div className="AcceptRejectBtn">
+                    <span> {ten.status} </span>   
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+
+
+
+
+
           </div>
         </div>
       </section>

@@ -303,11 +303,13 @@ export const UserProfile = () => {
                 >
                   <div className="dashsection">
                     <div className="dashItems" id="bid">
+                    {biddingData && !loading && (
                       <div className="totalBids">
                         <h5>Your total Bids</h5>
 
-                        <h3>30 Bids</h3>
+                        <h3>{biddingData.length} Bids</h3>
                       </div>
+                    )}
                     </div>
                     <div className="dashItems" id="req">
                       <div className="totalReq">
